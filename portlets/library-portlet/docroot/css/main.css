@@ -1,2 +1,19 @@
-.library-portlet {	
+.library-portlet {
+
+	.action-buttons {
+	}
+
+	.search-form {
+		float: right;
+		margin-bottom: 0;
+	}
+
+	.search-form .control-group {
+		display: inline-block;
+		margin-bottom: 0;
+	}
+
+	.search-form .control-group input {
+		margin-bottom: 0;
+	}
 }

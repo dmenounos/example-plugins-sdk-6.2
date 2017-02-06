@@ -10,6 +10,7 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.lang.StringUtils;
 
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -18,6 +19,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.util.PortalUtil;
@@ -27,6 +29,7 @@ import com.slayer.service.LMSBookLocalServiceUtil;
 
 public class LibraryPortlet extends MVCPortlet {
 
+	@SuppressWarnings("unchecked")
 	public void render(RenderRequest request, RenderResponse response) 
 		throws PortletException, IOException {
 
@@ -38,16 +41,15 @@ public class LibraryPortlet extends MVCPortlet {
 
 			try {
 				String searchTerm = ParamUtil.getString(request, LibraryConstants.SEARCH_TERM_PARAM);
-				request.setAttribute(LibraryConstants.SEARCH_TERM_PARAM, searchTerm);
 
 				List<LMSBook> lmsBooks = null;
 
 				if (!Validator.isNull(searchTerm)) {
-					// Explicit operation (search)
+					// Explicit search operation
 					lmsBooks = LMSBookLocalServiceUtil.searchBooks(searchTerm);
 				}
 				else {
-					// Implicit operation (show all)
+					// Implicit show all operation
 					lmsBooks = LMSBookLocalServiceUtil.getLMSBooks(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 				}
 
@@ -55,14 +57,22 @@ public class LibraryPortlet extends MVCPortlet {
 					lmsBooks = Collections.emptyList();
 				}
 
+				List<LMSBook> books = ListUtil.copy(lmsBooks);
+
+				// Notice how we define default order column and type
+				String orderByCol  = ParamUtil.getString(request, LibraryConstants.ORDER_BY_COL_PATTR, "bookTitle");
+				String orderByType = ParamUtil.getString(request, LibraryConstants.ORDER_BY_TYPE_PATTR, "asc");
+
+				Collections.sort(books, new BeanComparator(orderByCol));
+
+				if (orderByType.equalsIgnoreCase("desc")) {
+					Collections.reverse(books);
+				}
+
+				request.setAttribute(LibraryConstants.SEARCH_TERM_PARAM, searchTerm);
 				request.setAttribute(LibraryConstants.SEARCH_RESULTS_ATTR, lmsBooks);
-
-				// Notice how we define default order column (bookTitle) and type (asc).
-				String orderByCol  = ParamUtil.getString(request, "orderByCol", "bookTitle");
-				String orderByType = ParamUtil.getString(request, "orderByType", "asc");
-
-				request.setAttribute("orderByCol", orderByCol);
-				request.setAttribute("orderByType", orderByType);
+				request.setAttribute(LibraryConstants.ORDER_BY_COL_PATTR, orderByCol);
+				request.setAttribute(LibraryConstants.ORDER_BY_TYPE_PATTR, orderByType);
 			}
 			catch (SystemException e) {
 				throw new RuntimeException(e);

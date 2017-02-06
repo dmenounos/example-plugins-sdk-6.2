@@ -1,24 +1,5 @@
 <%@ include file="/html/library/init.jsp" %>
 
-<%@ page import="java.util.Collections" %>
-<%@ page import="org.apache.commons.beanutils.BeanComparator" %>
-<%@ page import="com.liferay.portal.kernel.util.ListUtil" %>
-<%@ page import="com.liferay.portal.kernel.dao.orm.QueryUtil" %>
-<%@ page import="com.liferay.portal.kernel.dao.search.RowChecker" %>
-
-<%
-List<LMSBook> booksTemp = (List<LMSBook>) request.getAttribute(LibraryConstants.SEARCH_RESULTS_ATTR);
-List<LMSBook> books = ListUtil.copy(booksTemp);
-
-String orderByCol = (String) request.getAttribute("orderByCol");
-String orderByType = (String) request.getAttribute("orderByType");
-BeanComparator comp = new BeanComparator(orderByCol);
-Collections.sort(books, comp);
-if (orderByType.equalsIgnoreCase("desc")) {
-	Collections.reverse(books);
-}
-%>
-
 <portlet:renderURL var="bookFormURL">
 	<portlet:param name="jspPage" value="<%=LibraryConstants.PAGE_BOOK_FORM%>" />
 </portlet:renderURL>
@@ -27,30 +8,33 @@ if (orderByType.equalsIgnoreCase("desc")) {
 	<portlet:param name="redirectURL" value="<%=iteratorURL.toString()%>" />
 </portlet:actionURL>
 
+<portlet:actionURL var="searchBooksURL" name="<%=LibraryConstants.ACTION_SEARCH_BOOKS%>" />
+
 <div class="book-list">
 
-		<aui:button-row>
-
-			<aui:button value="create-book" href="${bookFormURL}"
-				cssClass="create-book-button" />
-
-			<c:if test="<%=!books.isEmpty()%>">
-				<aui:button value="delete-books" disabled="true"
-					cssClass="delete-books-button disabled" />
-			</c:if>
-
-		</aui:button-row>
+	<aui:button-row cssClass="action-buttons">
+		<aui:button value="create-book" href="${bookFormURL}" cssClass="create-book-button" />
+		<c:if test="${not empty searchResults}">
+			<aui:button value="delete-books" disabled="true" cssClass="delete-books-button disabled" />
+		</c:if>
+		<aui:form name="searchForm" action="${searchBooksURL}" cssClass="form-inline search-form">
+			<aui:input label="" placeholder="search-term" name="searchTerm" value="${searchTerm}" />
+			<aui:button type="submit" value="Search" />
+		</aui:form>
+	</aui:button-row>
 
 	<aui:form name="searchResultsForm" method="post" action="<%=deleteBooksURL%>">
 		<aui:input name="bookIds" type="hidden" />
 
 		<liferay-ui:search-container delta="50" iteratorURL="<%=iteratorURL%>" 
-			orderByCol="<%=orderByCol%>" orderByType="<%=orderByType%>" 
+			orderByCol="${orderByCol}" orderByType="${orderByType}" 
 			rowChecker="<%=new RowChecker(renderResponse)%>" 
 			emptyResultsMessage="Sorry. There are no items to display.">
 
-			<liferay-ui:search-container-results total="<%=books.size()%>" 
-			    results="<%=ListUtil.subList(books, searchContainer.getStart(), searchContainer.getEnd())%>" />
+			<% List<LMSBook> lmsBooks = (List<LMSBook>) renderRequest.getAttribute(LibraryConstants.SEARCH_RESULTS_ATTR); %>
+
+			<liferay-ui:search-container-results total="${fn:length(searchResults)}" 
+			    results="<%=ListUtil.subList(lmsBooks, searchContainer.getStart(), searchContainer.getEnd())%>" />
 
 			<liferay-ui:search-container-row modelVar="book" className="LMSBook" keyProperty="bookId">
 
