@@ -1,0 +1,3 @@
+alter table LMS_LMSBorrowing add foreign key (bookId) references LMS_LMSBook (bookId);
+alter table LMS_LMSBorrowing add foreign key (memberId) references User_ (userId);
+

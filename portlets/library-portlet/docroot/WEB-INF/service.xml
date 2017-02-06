@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 6.2.0//EN" 
+"http://www.liferay.com/dtd/liferay-service-builder_6_2_0.dtd">
+<service-builder package-path="com.slayer">
+	<author>dmen</author>
+	<namespace>LMS</namespace>
+
+	<entity name="LMSBook" local-service="true" remote-service="false">
+
+		<!-- PK fields -->
+
+		<column name="bookId" type="long" primary="true" />
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+		<column name="groupId" type="long" />
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+		<column name="createDate" type="Date" />
+		<column name="modifiedDate" type="Date" />
+
+		<!-- Relationship
+		<column name="lmsBorrowings" type="Collection" 
+			entity="LMSBorrowing" mapping-key="bookId" /> -->
+		<!-- Other fields -->
+
+		<column name="bookTitle" type="String" />
+		<column name="author" type="String" />
+
+		<!-- Order -->
+
+		<order by="asc">
+			<order-column name="bookTitle" order-by="asc" />
+		</order>
+
+		<!-- Finder methods -->
+
+		<finder name="BookTitle_Author" return-type="LMSBook">
+			<finder-column name="bookTitle" />
+			<finder-column name="author" />
+		</finder>
+
+		<finder name="BookTitle" return-type="Collection">
+			<finder-column name="bookTitle" />
+		</finder>
+
+	</entity>
+
+	<entity name="LMSBorrowing" local-service="true" remote-service="false">
+
+		<!-- PK fields -->
+
+		<column name="borrowingId" type="long" primary="true" />
+
+		<!-- FK fields -->
+
+        <column name="bookId" type="long" />
+		<column name="memberId" type="long" />
+
+		<!-- Audit fields -->
+
+		<column name="dateBorrowed" type="Date" />
+		<column name="dateReturned" type="Date" />
+
+		<!-- Relationship -->
+		<finder name="BookId" return-type="Collection">
+			<finder-column name="bookId" />
+		</finder>
+
+	</entity>
+
+</service-builder>
