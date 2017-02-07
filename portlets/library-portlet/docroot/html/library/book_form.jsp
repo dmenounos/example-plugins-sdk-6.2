@@ -13,8 +13,10 @@ if (bookId > 0L) {
 	lmsBook = new LMSBookImpl();
 }
 
+String backURL = ParamUtil.getString(request, "backURL");
+
 PortletURL successURL = renderResponse.createRenderURL();
-successURL.setParameter("jspPage", bookId > 0L ? LibraryConstants.PAGE_SEARCH_LIST : LibraryConstants.PAGE_DEFAULT);
+successURL.setParameter("jspPage", bookId > 0L ? LibraryConstants.PAGE_BOOK_LIST : LibraryConstants.PAGE_DEFAULT);
 
 PortletURL updateBookURL = renderResponse.createActionURL();
 updateBookURL.setParameter(ActionRequest.ACTION_NAME, LibraryConstants.ACTION_UPDATE_BOOK);
@@ -30,8 +32,8 @@ updateBookURL.setParameter("redirectURL", successURL.toString());
 	<aui:button type="submit" value="Save" />
 </aui:form>
 
-<a href="<portlet:renderURL/>">Go Back</a>
+<a href="<%=backURL%>">Go Back</a>
 
-<aui:script>
+<script>
 Liferay.Util.focusFormField(document.${ns}fm.${ns}bookTitle);
-</aui:script>
+</script>

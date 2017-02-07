@@ -2,6 +2,7 @@
 
 <portlet:renderURL var="bookFormURL">
 	<portlet:param name="jspPage" value="<%=LibraryConstants.PAGE_BOOK_FORM%>" />
+	<portlet:param name="backURL" value="<%=iteratorURL.toString()%>" />
 </portlet:renderURL>
 
 <portlet:actionURL var="deleteBooksURL" name="<%=LibraryConstants.ACTION_DELETE_BOOKS%>">
@@ -23,10 +24,10 @@
 		</aui:form>
 	</aui:button-row>
 
-	<aui:form name="searchResultsForm" method="post" action="<%=deleteBooksURL%>">
+	<aui:form name="searchResultsForm" action="${deleteBooksURL}">
 		<aui:input name="bookIds" type="hidden" />
 
-		<liferay-ui:search-container delta="50" iteratorURL="<%=iteratorURL%>" 
+		<liferay-ui:search-container delta="50" iteratorURL="${iteratorURL}" 
 			orderByCol="${orderByCol}" orderByType="${orderByType}" 
 			rowChecker="<%=new RowChecker(renderResponse)%>" 
 			emptyResultsMessage="Sorry. There are no items to display.">
@@ -39,9 +40,9 @@
 			<liferay-ui:search-container-row modelVar="book" className="LMSBook" keyProperty="bookId">
 
 				<portlet:renderURL var="bookViewURL">
-					<portlet:param name="bookId"  value="<%=Long.toString(book.getBookId())%>" />
-					<portlet:param name="backURL" value="<%=themeDisplay.getURLCurrent()%>" />
 					<portlet:param name="jspPage" value="<%=LibraryConstants.PAGE_BOOK_VIEW%>" />
+					<portlet:param name="backURL" value="<%=iteratorURL.toString()%>" />
+					<portlet:param name="bookId"  value="<%=Long.toString(book.getBookId())%>" />
 				</portlet:renderURL>
 
 				<liferay-ui:search-container-column-text name="Book Title" property="bookTitle" href="<%=bookViewURL.toString()%>" 
@@ -54,7 +55,7 @@
 					<fmt:formatDate value="<%=book.getCreateDate()%>" pattern="dd/MMM/yyyy" />
 				</liferay-ui:search-container-column-text>
 
-				<liferay-ui:search-container-column-jsp name="Actions" path="<%=LibraryConstants.PAGE_SEARCH_LIST_ACTIONS%>" />
+				<liferay-ui:search-container-column-jsp name="Actions" path="<%=LibraryConstants.PAGE_BOOK_LIST_ACTIONS%>" />
 
 			</liferay-ui:search-container-row>
 
@@ -63,10 +64,11 @@
 	</aui:form>
 </div>
 
-<aui:script>
-AUI().use(function() {
-	BookList = InitBookList('${ns}', {
+<script>
+$(function() {
+	bookList = new BookList({
+		ns: '${ns}',
 		'confirm-delete-selected-books' : '<%=UnicodeLanguageUtil.get(pageContext, "confirm-delete-selected-books")%>'
 	});
 });
-</aui:script>
+</script>

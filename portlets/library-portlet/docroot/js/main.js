@@ -1,61 +1,61 @@
-function InitBookList(ns, cfg) {
+BookList = Obj.extend(Obj, {
 
-	//
-	// search_list.jsp
-	//
+	init: function() {
+		var ns = this.ns;
 
-	var BookList = {};
+		//
+		// book_list.jsp
+		//
 
-	AUI().use('aui-base', function(A) {
-		var deleteBooksButton = A.one('.book-list .delete-books-button');
-		deleteBooksButton.on('click', function() {
-			BookList.submitFormForAction();
-		});
+		AUI().use('aui-base', $.proxy(function(A) {
+			var deleteBooksButton = $('.book-list .delete-books-button');
+			deleteBooksButton.on('click', $.proxy(function() {
+				this.submitFormForAction();
+			}, this));
 
-		var booksGrid = A.one('.book-list .lfr-search-container');
-		booksGrid.delegate('click', function(event) {
-			var disabled = booksGrid.one(':checked') == null;
-			disableDeleteBooksButton(disabled);
-		}, ':checkbox');
+			var booksGrid = $('.book-list .lfr-search-container');
+			booksGrid.on('click', ':checkbox', $.proxy(function(event) {
+				var disabled = $(':checked', booksGrid).length == 0;
+				disableDeleteBooksButton(disabled);
+			}, this));
 
-		disableDeleteBooksButton(true);
+			disableDeleteBooksButton(true);
 
-		function disableDeleteBooksButton(disabled) {
-			deleteBooksButton.attr('disabled', disabled);
-			deleteBooksButton.toggleClass('disabled', disabled);
-		}
-	});
+			function disableDeleteBooksButton(disabled) {
+				deleteBooksButton.prop('disabled', disabled);
+				deleteBooksButton.toggleClass('disabled', disabled);
+			}
+		}, this));
 
-	Liferay.provide(BookList, 'submitFormForAction', function() {
-		var accepted = confirm(cfg['confirm-delete-selected-books']);
-		if (accepted) {
-			var searchResultsForm = document[ns+'searchResultsForm'];
-			var hiddenField = searchResultsForm[ns+'bookIds'];
-			hiddenField.value = Liferay.Util.listCheckedExcept(searchResultsForm, ns+"allRowIds");
-			submitForm(searchResultsForm);
-		}
-	}, ['liferay-util-list-fields']);
+		Liferay.provide(this, 'submitFormForAction', $.proxy(function() {
+			var accepted = confirm(this['confirm-delete-selected-books']);
+			if (accepted) {
+				var searchResultsForm = document[ns+'searchResultsForm'];
+				var hiddenField = searchResultsForm[ns+'bookIds'];
+				hiddenField.value = Liferay.Util.listCheckedExcept(searchResultsForm, ns+"allRowIds");
+				submitForm(searchResultsForm);
+			}
+		}, this), ['liferay-util-list-fields']);
 
-	//
-	// search_list_actions.jsp
-	//
+		//
+		// book_list_actions.jsp
+		//
 
-	AUI().use('aui-base','liferay-util-window','aui-io-plugin-deprecated', function(A) {
-		BookList.bookPopup = function(url) {
-			var dialog = Liferay.Util.Window.getWindow({
-				title: 'Book Details',
-				dialog: {
-					destroyOnHide: true,
-					width: 500,
-					height: 400
-				},
-			})
-			.plug(A.Plugin.IO, {
-				uri: url
-			})
-			.render();
-		}
-	});
-
-	return BookList;
-};
+		AUI().use('aui-base','liferay-util-window','aui-io-plugin-deprecated', $.proxy(function(A) {
+			this.bookPopup = function(url) {
+				var dialog = Liferay.Util.Window.getWindow({
+					title: 'Book Details',
+					dialog: {
+						destroyOnHide: true,
+						width: 500,
+						height: 400
+					},
+				})
+				.plug(A.Plugin.IO, {
+					uri: url
+				})
+				.render();
+			}
+		}, this));
+	}
+});

@@ -5,10 +5,11 @@
 	<portlet>
 		<portlet-name>library</portlet-name>
 		<icon>/icon.png</icon>
+		<header-portlet-css>http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css</header-portlet-css>
 		<header-portlet-css>/css/main.css</header-portlet-css>
-		<header-portlet-css>http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css</header-portlet-css>
-		<header-portlet-javascript>http://code.jquery.com/jquery-latest.min.js</header-portlet-javascript>
-		<header-portlet-javascript>http://code.jquery.com/ui/1.10.0/jquery-ui.min.js</header-portlet-javascript>
+		<header-portlet-javascript>http://code.jquery.com/jquery-3.1.1.min.js</header-portlet-javascript>
+		<header-portlet-javascript>http://code.jquery.com/ui/1.12.1/jquery-ui.min.js</header-portlet-javascript>
+		<footer-portlet-javascript>/js/object.js</footer-portlet-javascript>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>library-portlet</css-class-wrapper>
 	</portlet>

@@ -7,6 +7,6 @@
 <%@ page import="com.slayer.service.LMSBookLocalServiceUtil" %>
 
 <%
-// Used in: search_list.jsp, search_list_actions.jsp
+// Used in: book_list.jsp, book_list_actions.jsp
 PortletURL iteratorURL = renderResponse.createRenderURL();
 %>

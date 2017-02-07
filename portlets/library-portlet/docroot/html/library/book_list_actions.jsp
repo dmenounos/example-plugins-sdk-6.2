@@ -24,7 +24,7 @@ deleteBookURL.setParameter("redirectURL", iteratorURL.toString());
 %>
 
 <liferay-ui:icon-menu>
-	<% String bookPopupJS = "javascript:BookList.bookPopup('" + bookViewURL + "');"; %>
+	<% String bookPopupJS = "javascript:bookList.bookPopup('" + bookViewURL + "');"; %>
 	<liferay-ui:icon image="view"   message="View Book"   url="<%=bookPopupJS.toString()%>" />
 	<liferay-ui:icon image="edit"   message="Edit Book"   url="<%=bookFormURL.toString()%>" />
 	<liferay-ui:icon image="delete" message="Delete Book" url="<%=deleteBookURL.toString()%>" />

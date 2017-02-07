@@ -12,8 +12,9 @@ if (bookId > 0L) {
 %>
 
 <c:if test="<%=!hideHeader%>">
-	<liferay-ui:header backLabel="&laquo; Back to List"
-		title="Book Details" backURL="<%=backURL%>" />
+	<liferay-ui:header title="Book Details" 
+		 backLabel="&laquo; Back to List" 
+		 backURL="<%=backURL%>" />
 </c:if>
 
 <c:if test="<%=Validator.isNotNull(lmsBook)%>">

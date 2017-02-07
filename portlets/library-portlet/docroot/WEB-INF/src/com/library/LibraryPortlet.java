@@ -37,7 +37,7 @@ public class LibraryPortlet extends MVCPortlet {
 
 		if (StringUtils.isEmpty(jspPage) || 
 			jspPage.equals(LibraryConstants.PAGE_DEFAULT) || 
-			jspPage.equals(LibraryConstants.PAGE_SEARCH_LIST)) {
+			jspPage.equals(LibraryConstants.PAGE_BOOK_LIST)) {
 
 			try {
 				String searchTerm = ParamUtil.getString(request, LibraryConstants.SEARCH_TERM_PARAM);
@@ -70,7 +70,7 @@ public class LibraryPortlet extends MVCPortlet {
 				}
 
 				request.setAttribute(LibraryConstants.SEARCH_TERM_PARAM, searchTerm);
-				request.setAttribute(LibraryConstants.SEARCH_RESULTS_ATTR, lmsBooks);
+				request.setAttribute(LibraryConstants.SEARCH_RESULTS_ATTR, books);
 				request.setAttribute(LibraryConstants.ORDER_BY_COL_PATTR, orderByCol);
 				request.setAttribute(LibraryConstants.ORDER_BY_TYPE_PATTR, orderByType);
 			}
