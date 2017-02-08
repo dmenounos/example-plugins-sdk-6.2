@@ -24,19 +24,21 @@ Obj.copy = function(targetObject, sourceObject)
 
 Obj.extend = function(superClass, subClassDefinition)
 {
-	// create prototype class
-	var subClassPrototype = function() {};
+	// Create a substitute constructor for the super class.
+	// It is empty, thus requires no arguments and avoids side effects.
+	var superClassSubstitute = function() {};
 
-	// delegates directly to superClass prototype
-	subClassPrototype.prototype = superClass.prototype;
+	// It uses the same prototype instance as the actual super class.
+	superClassSubstitute.prototype = superClass.prototype;
 
-	// create sub class
+	// Create the constructor for our sub class.
 	var subClass = function() {
-		// call the super constructor
+		// Call the super class constructor.
 		superClass.apply(this, arguments);
 	};
 
-	subClass.prototype = new subClassPrototype();
+	// Create an instance of the super class for our prototype.
+	subClass.prototype = new superClassSubstitute();
 	subClass.superClass = superClass;
 
 	Obj.copy(subClass.prototype, subClassDefinition);

@@ -2,11 +2,11 @@
 
 <portlet:renderURL var="bookFormURL">
 	<portlet:param name="jspPage" value="<%=LibraryConstants.PAGE_BOOK_FORM%>" />
-	<portlet:param name="backURL" value="<%=iteratorURL.toString()%>" />
+	<portlet:param name="backURL" value="<%=currentURL.toString()%>" />
 </portlet:renderURL>
 
 <portlet:actionURL var="deleteBooksURL" name="<%=LibraryConstants.ACTION_DELETE_BOOKS%>">
-	<portlet:param name="redirectURL" value="<%=iteratorURL.toString()%>" />
+	<portlet:param name="redirectURL" value="<%=currentURL.toString()%>" />
 </portlet:actionURL>
 
 <portlet:actionURL var="searchBooksURL" name="<%=LibraryConstants.ACTION_SEARCH_BOOKS%>" />
@@ -27,21 +27,24 @@
 	<aui:form name="searchResultsForm" action="${deleteBooksURL}">
 		<aui:input name="bookIds" type="hidden" />
 
-		<liferay-ui:search-container delta="50" iteratorURL="${iteratorURL}" 
+		<liferay-ui:search-container delta="50" iteratorURL="${currentURL}" 
 			orderByCol="${orderByCol}" orderByType="${orderByType}" 
 			rowChecker="<%=new RowChecker(renderResponse)%>" 
 			emptyResultsMessage="Sorry. There are no items to display.">
 
-			<% List<LMSBook> lmsBooks = (List<LMSBook>) renderRequest.getAttribute(LibraryConstants.SEARCH_RESULTS_ATTR); %>
+			<%
+			List<LMSBook> searchResults = (List<LMSBook>) renderRequest.getAttribute(LibraryConstants.SEARCH_RESULTS_ATTR);
+			searchResults = ListUtil.subList(searchResults, searchContainer.getStart(), searchContainer.getEnd());
+			renderRequest.setAttribute(LibraryConstants.SEARCH_RESULTS_ATTR, searchResults);
+			%>
 
-			<liferay-ui:search-container-results total="${fn:length(searchResults)}" 
-			    results="<%=ListUtil.subList(lmsBooks, searchContainer.getStart(), searchContainer.getEnd())%>" />
+			<liferay-ui:search-container-results results="${searchResults}" total="${searchResultsTotal}" />
 
 			<liferay-ui:search-container-row modelVar="book" className="LMSBook" keyProperty="bookId">
 
 				<portlet:renderURL var="bookViewURL">
 					<portlet:param name="jspPage" value="<%=LibraryConstants.PAGE_BOOK_VIEW%>" />
-					<portlet:param name="backURL" value="<%=iteratorURL.toString()%>" />
+					<portlet:param name="backURL" value="<%=currentURL.toString()%>" />
 					<portlet:param name="bookId"  value="<%=Long.toString(book.getBookId())%>" />
 				</portlet:renderURL>
 

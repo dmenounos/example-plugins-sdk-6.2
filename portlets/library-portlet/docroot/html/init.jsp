@@ -23,3 +23,7 @@
 <liferay-theme:defineObjects />
 
 <c:set var="ns"><portlet:namespace /></c:set>
+
+<%
+PortletURL currentURL = renderResponse.createRenderURL();
+%>

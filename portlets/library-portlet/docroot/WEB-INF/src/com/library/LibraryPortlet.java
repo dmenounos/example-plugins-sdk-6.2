@@ -71,6 +71,7 @@ public class LibraryPortlet extends MVCPortlet {
 
 				request.setAttribute(LibraryConstants.SEARCH_TERM_PARAM, searchTerm);
 				request.setAttribute(LibraryConstants.SEARCH_RESULTS_ATTR, books);
+				request.setAttribute(LibraryConstants.SEARCH_RESULTS_TOTAL_ATTR, books.size());
 				request.setAttribute(LibraryConstants.ORDER_BY_COL_PATTR, orderByCol);
 				request.setAttribute(LibraryConstants.ORDER_BY_TYPE_PATTR, orderByType);
 			}

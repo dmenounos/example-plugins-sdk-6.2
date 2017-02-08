@@ -16,11 +16,12 @@ bookViewURL.setParameter("jspPage", LibraryConstants.PAGE_BOOK_VIEW);
 PortletURL bookFormURL = renderResponse.createRenderURL();
 bookFormURL.setParameter("bookId", Long.toString(book.getBookId()));
 bookFormURL.setParameter("jspPage", LibraryConstants.PAGE_BOOK_FORM);
+bookFormURL.setParameter("backURL", currentURL.toString());
 
 PortletURL deleteBookURL = renderResponse.createActionURL();
 deleteBookURL.setParameter(ActionRequest.ACTION_NAME, LibraryConstants.ACTION_DELETE_BOOK);
 deleteBookURL.setParameter("bookId", Long.toString(book.getBookId()));
-deleteBookURL.setParameter("redirectURL", iteratorURL.toString());
+deleteBookURL.setParameter("redirectURL", currentURL.toString());
 %>
 
 <liferay-ui:icon-menu>
